@@ -27,10 +27,10 @@ dependencies:
   floating_action_bubble: ^1.1.4
   fab_circular_menu: ^1.0.0
 
-  flutter_overlay_window: ^0.3.2
+  # flutter_overlay_window: ^0.3.2
 
-  # flutter_overlay_window:
-  #   path: ../
+  flutter_overlay_window:
+    path: ../
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
