@@ -7,28 +7,45 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.app.PendingIntent;
 import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
-import com.github.clans.fab.FloatingActionButton;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.constraintlayout.solver.widgets.Rectangle;
 import androidx.core.app.NotificationCompat;
 
 import com.example.flutter_overlay_window.R;
-import com.github.clans.fab.FloatingActionMenu;
+import com.robertlevonyan.views.customfloatingactionbutton.FabMenuAnimation;
+import com.robertlevonyan.views.customfloatingactionbutton.FabType;
+import com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton;
+import com.robertlevonyan.views.customfloatingactionbutton.FloatingActionLayout;
+import com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout;
 
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -59,7 +76,11 @@ public class OverlayService extends Service implements View.OnTouchListener {
     private Point szWindow = new Point();
     private Timer mTrayAnimationTimer;
     private TrayAnimationTimerTask mTrayTimerTask;
+
     private View myView;
+    private Timer timer;
+    private long timerSec = 0;
+    private FloatingActionButton mainFab;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -75,13 +96,79 @@ public class OverlayService extends Service implements View.OnTouchListener {
         notificationManager.cancel(OverlayConstants.NOTIFICATION_ID);
     }
 
+    private void stopTimer(){
+        if(timer == null){
+            return;
+        }
+        timer.cancel();
+        timerSec = 0;
+    }
+
+    private void startTimer(){
+        timer = new Timer();
+        timerSec = 0;
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                timerSec += 1;
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    public void run() {
+                        mainFab.setText(secToMinSec());
+
+                    }
+                });
+
+            }
+        },0,1000);
+    }
+    private String secToMinSec(){
+        if(timerSec == 0) { return "00:00"; }
+        Date date = new Date(timerSec * 1000);
+        SimpleDateFormat formatter = new SimpleDateFormat("mm:ss", Locale.ENGLISH);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return formatter.format(date);
+    }
+
+    private Drawable resize(Drawable image) {
+        Bitmap b = ((BitmapDrawable)image).getBitmap();
+        Bitmap bitmapResized = Bitmap.createScaledBitmap(b, 12, 12, false);
+        return new BitmapDrawable(getResources(), bitmapResized);
+    }
+
+
+    private Drawable getAppIcon(){
+
+        try
+        {
+
+            Drawable icon = getApplicationContext().getPackageManager().getApplicationIcon(OverlayConstants.APP_PACKAGE);
+            return icon;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_launcher);
+        }
+    }
+
+    private void launchApp(){
+        try{
+            Context ctx=getApplicationContext(); // or you can replace **'this'** with your **ActivityName.this**
+            Intent i = ctx.getPackageManager().getLaunchIntentForPackage(OverlayConstants.APP_PACKAGE);
+            ctx.startActivity(i);
+
+        }catch (Exception e){
+
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         boolean isCloseWindow = intent.getBooleanExtra(INTENT_EXTRA_IS_CLOSE_WINDOW, false);
         if (isCloseWindow) {
             if (windowManager != null) {
-                windowManager.removeView(flutterView);
+                stopTimer();
+                windowManager.removeView(myView);
                 windowManager = null;
                 stopSelf();
             }
@@ -89,7 +176,8 @@ public class OverlayService extends Service implements View.OnTouchListener {
             return START_STICKY;
         }
         if (windowManager != null) {
-            windowManager.removeView(flutterView);
+            stopTimer();
+            windowManager.removeView(myView);
             windowManager = null;
             stopSelf();
         }
@@ -131,8 +219,8 @@ public class OverlayService extends Service implements View.OnTouchListener {
             szWindow.set(w, h);
         }
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
                 LAYOUT_TYPE,
                 WindowSetup.flag | WindowManager.LayoutParams.FLAG_SECURE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 PixelFormat.TRANSLUCENT
@@ -161,23 +249,90 @@ public class OverlayService extends Service implements View.OnTouchListener {
         
 //        flutterView.setOnTouchListener(this);
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-        myView = inflater.inflate(R.layout.fab, null);
-        FloatingActionMenu fab = myView.findViewById(R.id.menu);
-        LinearLayout lay = myView.findViewById(R.id.overlay);
-        lay.setClickable(true);
+        myView = inflater.inflate(R.layout.fab_test, null);
+//        FloatingLayout
+//        FloatingLayout layout = myView.findViewById(R.id.fab_layout);
+//        layout.setFabAnimationStyle(FabMenuAnimation.ANIMATION_POP_UP);
+        //
+        mainFab = myView.findViewById(R.id.main_fab);
+        FloatingActionButton appFab = myView.findViewById(R.id.app_fab);
+        FloatingActionButton stopFab = myView.findViewById(R.id.stop_fab);
+
+//        appFab.setFabIcon(resize(getAppIcon()));
+//        appFab.set
+
+        appFab.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                   launchApp();
+                }
+                return false;
+            }
+        });
+        stopFab.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                    launchApp();
+                    EventsChannel.instant.stopScreenRecording();
+                }
+                return false;
+            }
+        });
+        mainFab.setText("00:00");
+//        fab.getOverlay()
+//        fab.getRootView().getvi
+        mainFab.setClickable(true);
+        mainFab.setOnTouchListener(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+//            appFab.getOverlay().add(getAppIcon());
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                public void run() {
+                    Drawable drawable = AppCompatResources.getDrawable(getApplicationContext(), R.drawable.stop);
+                    drawable.setBounds(35, 35, 75, 75);
+                    stopFab.getOverlay().add(drawable);
+
+                }
+            });
+
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+//            appFab.getOverlay().add(getAppIcon());
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                public void run() {
+                    Drawable drawable = getAppIcon();
+                    drawable.setBounds(0, 0, 110, 110);
+                    appFab.getOverlay().add(drawable);
+
+                }
+            });
+
+        }
+        //
+//        LinearLayout lay = myView.findViewById(R.id.overlay);
+//        lay.setClickable(true);
 
 //        Fragment fab = new fab();
-        lay.setOnTouchListener(this);
+//        lay.setOnTouchListener(this);
 //        fab.onTouchEvent(fa)
-//        fab.setOnTouchListener(this);
 
 
 
         windowManager.addView(myView, params);
 
+
+
+
+        startTimer();
+
 //        windowManager.addView(flutterView, params);
         return START_STICKY;
     }
+
+
 
 
     private void updateOverlayFlag(MethodChannel.Result result, String flag) {
@@ -250,6 +405,7 @@ public class OverlayService extends Service implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
+
         if (windowManager != null && WindowSetup.enableDrag) {
 
             WindowManager.LayoutParams params = (WindowManager.LayoutParams) myView.getLayoutParams();

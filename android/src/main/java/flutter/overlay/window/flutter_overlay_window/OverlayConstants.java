@@ -1,7 +1,7 @@
 package flutter.overlay.window.flutter_overlay_window;
 
 final public class OverlayConstants {
-
+    static final String APP_PACKAGE = "com.example.flutter_overlay_window_example";
     static final String CACHED_TAG = "myCachedEngine";
     static final String CHANNEL_TAG = "x-slayer/overlay_channel";
     static final String OVERLAY_TAG = "x-slayer/overlay";

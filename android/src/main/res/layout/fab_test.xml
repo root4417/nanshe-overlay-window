@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout
+        android:id="@+id/floating_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="350dp"
+        android:gravity="bottom|end"
+        app:fabMenuStyle="popUp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
+            android:id="@+id/main_fab"
+            android:layout_width="wrap_content"
+            app:fabType="circle"
+            android:layout_height="wrap_content"
+            app:fabAnimateMenu="false"
+            app:fabColor="#ef476f" >
+        </com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton>
+
+        <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
+            android:id="@+id/app_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fabColor="#ffd166"
+            app:fabSizes="mini" />
+
+        <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
+            android:id="@+id/stop_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fabColor="#06d6a0"
+            app:fabSizes="mini" />
+
+
+    </com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
