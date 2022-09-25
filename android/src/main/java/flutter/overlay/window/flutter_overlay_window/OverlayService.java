@@ -129,17 +129,18 @@ public class OverlayService extends Service implements View.OnTouchListener {
 
 
     private Drawable getAppIcon(){
+        return AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_launcher);
 
-        try
-        {
-
-            Drawable icon = getApplicationContext().getPackageManager().getApplicationIcon(OverlayConstants.APP_PACKAGE);
-            return icon;
-        }
-        catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            return AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_launcher);
-        }
+//        try
+//        {
+//
+//            Drawable icon = getApplicationContext().getPackageManager().getApplicationIcon(OverlayConstants.APP_PACKAGE);
+//            return icon;
+//        }
+//        catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//            return AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_launcher);
+//        }
     }
 
     private void launchApp(){
