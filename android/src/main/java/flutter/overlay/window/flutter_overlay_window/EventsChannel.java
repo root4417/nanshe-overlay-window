@@ -22,6 +22,7 @@ public class EventsChannel{
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 methodChannel.invokeMethod("stopRecording",null);
             }
         }, 500);
