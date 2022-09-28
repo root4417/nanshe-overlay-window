@@ -20,14 +20,14 @@ public class EventsChannel{
     }
 
     public void stopScreenRecording(){
-        final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+//        final Handler handler = new Handler(Looper.getMainLooper());
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
 
                 methodChannel.invokeMethod("stopRecording","");
-            }
-        }, 1500);
+//            }
+//        }, 1500);
 
     }
 

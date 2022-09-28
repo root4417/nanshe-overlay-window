@@ -236,17 +236,17 @@ public class OverlayService extends Service implements View.OnTouchListener {
                 if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
                    launchApp();
                 }
-                return false;
+                return true;
             }
         });
         stopFab.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                    launchApp();
+//                    launchApp();
                     EventsChannel.instant.stopScreenRecording();
                 }
-                return false;
+                return true;
             }
         });
         mainFab.setText("00:00");
