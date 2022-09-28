@@ -3,6 +3,8 @@ package flutter.overlay.window.flutter_overlay_window;
 import android.os.Handler;
 import android.os.Looper;
 
+import java.util.Map;
+
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
@@ -23,9 +25,9 @@ public class EventsChannel{
             @Override
             public void run() {
 
-                methodChannel.invokeMethod("stopRecording",null);
+                methodChannel.invokeMethod("stopRecording","");
             }
-        }, 500);
+        }, 1500);
 
     }
 
