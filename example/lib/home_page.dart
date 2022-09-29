@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 
+import 'overlays/OverlayChannel.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -15,6 +17,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     log("Started listening");
+    // OverlayChannel().configureChannel();
     FlutterOverlayWindow.overlayListener.listen((event) {
       log("$event");
     });

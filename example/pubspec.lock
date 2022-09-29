@@ -114,9 +114,11 @@ packages:
   flutter_overlay_window:
     dependency: "direct main"
     description:
-      path: ".."
-      relative: true
-    source: path
+      path: "."
+      ref: master
+      resolved-ref: "84a9e47f9c26d6a2062570d69342972fe130d1e7"
+      url: "https://github.com/Amapps58/nanshe-overlay-window.git"
+    source: git
     version: "0.3.2"
   flutter_test:
     dependency: "direct dev"
