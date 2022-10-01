@@ -18,6 +18,21 @@ class FlutterOverlayWindow {
   static const BasicMessageChannel _overlayMessageChannel =
       BasicMessageChannel("x-slayer/overlay_messenger", JSONMessageCodec());
 
+  static const MethodChannel _customChannel =
+      MethodChannel('x-slayer/customChannel');
+  static Function _onStopListener = () {};
+
+  static void setRecordingStopListener(Function listener) {
+    _customChannel.setMethodCallHandler((call) async {
+      switch (call.method) {
+        case 'stopRecording':
+          _onStopListener();
+          break;
+      }
+    });
+    _onStopListener = listener;
+  }
+
   /// Open overLay content
   ///
   /// - Optional arguments:

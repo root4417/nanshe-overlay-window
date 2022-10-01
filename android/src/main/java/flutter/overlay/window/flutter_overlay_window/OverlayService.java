@@ -143,16 +143,7 @@ public class OverlayService extends Service implements View.OnTouchListener {
 //        }
     }
 
-    private void launchApp(){
-        try{
-            Context ctx=getApplicationContext(); // or you can replace **'this'** with your **ActivityName.this**
-            Intent i = ctx.getPackageManager().getLaunchIntentForPackage(OverlayConstants.APP_PACKAGE);
-            ctx.startActivity(i);
 
-        }catch (Exception e){
-
-        }
-    }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -234,21 +225,27 @@ public class OverlayService extends Service implements View.OnTouchListener {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                   launchApp();
+                   OverlayConstants.launchApp(getApplicationContext());
                 }
                 return true;
             }
         });
-        stopFab.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-//                    launchApp();
-                    EventsChannel.instant.stopScreenRecording();
-                }
-                return true;
-            }
-        });
+        stopFab.setOnTouchListener(OverlayConstants.stopRecordingTouchListener);
+//        stopFab.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+////                    MethodChannel customChannel = new MethodChannel(engine.getDartExecutor().getBinaryMessenger(), "x-slayer/customChannel");
+////                    getParent().customChannel.invokeMethod("Frm Stop event",null);
+//
+////                    launchApp();
+////                    EventsChannel.instant.stopScreenRecording();
+////                    WindowSetup.messenger.send("This is my message from overlay");
+////                    WindowSetup.messenger.send("Stop recording event");
+//                }
+//                return true;
+//            }
+//        });
         mainFab.setText("00:00");
         mainFab.setClickable(true);
         mainFab.setOnTouchListener(this);

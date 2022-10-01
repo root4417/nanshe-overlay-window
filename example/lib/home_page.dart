@@ -16,11 +16,18 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    log("Started listening");
+    print("Started listening");
     // OverlayChannel().configureChannel();
+    FlutterOverlayWindow.shareData("from main app");
+    FlutterOverlayWindow.setRecordingStopListener(stopListener);
     FlutterOverlayWindow.overlayListener.listen((event) {
-      log("$event");
+      print("overlay window listener");
+      print("$event");
     });
+  }
+
+  stopListener() {
+    print('stop listener from flutter');
   }
 
   @override

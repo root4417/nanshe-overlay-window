@@ -14,6 +14,7 @@ public class EventsChannel{
     final public String CHANNEL_NAME = "OVERLAY_WINDOW";
 
     public MethodChannel methodChannel;
+    public MethodChannel customChannel;
 
     public void configureChannel(BinaryMessenger binaryMessenger) {
         methodChannel = new MethodChannel(binaryMessenger, CHANNEL_NAME);

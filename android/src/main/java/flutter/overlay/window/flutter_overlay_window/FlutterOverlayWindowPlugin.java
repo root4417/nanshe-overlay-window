@@ -8,7 +8,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
-import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,6 +37,7 @@ public class FlutterOverlayWindowPlugin implements
         PluginRegistry.ActivityResultListener {
 
     private MethodChannel channel;
+    private MethodChannel customChannel;
     private Context context;
     private Activity mActivity;
     private BasicMessageChannel<Object> messenger;
@@ -47,20 +49,36 @@ public class FlutterOverlayWindowPlugin implements
         this.context = flutterPluginBinding.getApplicationContext();
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), OverlayConstants.CHANNEL_TAG);
         channel.setMethodCallHandler(this);
-
-        EventsChannel.instant.configureChannel(flutterPluginBinding.getBinaryMessenger());
+//        OverlayConstants.customChannel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "x-slayer/customChannel");
+        customChannel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "x-slayer/customChannel");
         messenger = new BasicMessageChannel(flutterPluginBinding.getBinaryMessenger(), OverlayConstants.MESSENGER_TAG,
                 JSONMessageCodec.INSTANCE);
         messenger.setMessageHandler(this);
 
         WindowSetup.messenger = messenger;
         WindowSetup.messenger.setMessageHandler(this);
+
+
     }
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         pendingResult = result;
+        OverlayConstants.stopRecordingTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                    OverlayConstants.launchApp(context);
+                    customChannel.invokeMethod("stopRecording",null);
+                }
+
+                return false;
+            }
+        };
         if (call.method.equals("checkPermission")) {
+            //Added
+            customChannel.invokeMethod("from overlay",null);
+            //Added
             result.success(checkOverlayPermission());
         } else if (call.method.equals("requestPermission")) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
