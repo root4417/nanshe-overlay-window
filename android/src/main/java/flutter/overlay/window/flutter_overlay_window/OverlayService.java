@@ -23,15 +23,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 
 import com.example.flutter_overlay_window.R;
 import com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton;
+import com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout;
 
 
 import java.text.SimpleDateFormat;
@@ -143,6 +146,7 @@ public class OverlayService extends Service implements View.OnTouchListener {
 //        }
     }
 
+    boolean isExpanded = false;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -207,7 +211,8 @@ public class OverlayService extends Service implements View.OnTouchListener {
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 LAYOUT_TYPE,
-                WindowSetup.flag | WindowManager.LayoutParams.FLAG_SECURE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowSetup.flag | WindowManager.LayoutParams.FLAG_SECURE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS| WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                |WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                 PixelFormat.TRANSLUCENT
         );
 
@@ -216,10 +221,49 @@ public class OverlayService extends Service implements View.OnTouchListener {
         }
         params.gravity = WindowSetup.gravity;
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+
         myView = inflater.inflate(R.layout.fab, null);
         mainFab = myView.findViewById(R.id.main_fab);
+        FloatingLayout fabLayout = myView.findViewById(R.id.floating_layout);
         FloatingActionButton appFab = myView.findViewById(R.id.app_fab);
         FloatingActionButton stopFab = myView.findViewById(R.id.stop_fab);
+//        fabLayout.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                return false;
+//            }
+//        });
+//        fabLayout.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                return true;
+//            }
+//        });
+
+//        mainFab.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+//                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+//                        public void run() {
+//                            if(isExpanded){
+//                                fabLayout.setLayoutParams(new ConstraintLayout.LayoutParams(
+//                                        ConstraintLayout.LayoutParams.WRAP_CONTENT,ConstraintLayout.LayoutParams.WRAP_CONTENT
+//                                ));
+//                            } else {
+//                                fabLayout.setLayoutParams(new ConstraintLayout.LayoutParams(
+//                                        ConstraintLayout.LayoutParams.WRAP_CONTENT,550
+//                                ));
+//                            }
+//                            isExpanded = !isExpanded;
+//
+//                        }
+//                    },2500);
+//                }
+//                return true;
+//            }
+//        });
+
 
         appFab.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -231,6 +275,22 @@ public class OverlayService extends Service implements View.OnTouchListener {
             }
         });
         stopFab.setOnTouchListener(OverlayConstants.stopRecordingTouchListener);
+
+//        fabLayout.setOnMenuExpandedListener(new FloatingLayout.OnMenuExpandedListener() {
+//            @Override
+//            public void onMenuExpanded() {
+//                fabLayout.setLayoutParams(new ConstraintLayout.LayoutParams(
+//                        ConstraintLayout.LayoutParams.WRAP_CONTENT,450
+//                ));
+//            }
+//
+//            @Override
+//            public void onMenuCollapsed() {
+//                fabLayout.setLayoutParams(new ConstraintLayout.LayoutParams(
+//                        ConstraintLayout.LayoutParams.WRAP_CONTENT,ConstraintLayout.LayoutParams.WRAP_CONTENT
+//                ));
+//            }
+//        });
 //        stopFab.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent) {
