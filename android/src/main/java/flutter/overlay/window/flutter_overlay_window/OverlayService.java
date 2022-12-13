@@ -24,7 +24,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -147,6 +149,7 @@ public class OverlayService extends Service implements View.OnTouchListener {
     }
 
     boolean isExpanded = false;
+    ViewGroup.LayoutParams prms = null;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -190,6 +193,7 @@ public class OverlayService extends Service implements View.OnTouchListener {
                 resizeOverlay(width, height, result);
             }
         });
+
         overlayMessageChannel.setMessageHandler((message, reply) -> {
             WindowSetup.messenger.send(message);
         });
@@ -227,6 +231,66 @@ public class OverlayService extends Service implements View.OnTouchListener {
         FloatingLayout fabLayout = myView.findViewById(R.id.floating_layout);
         FloatingActionButton appFab = myView.findViewById(R.id.app_fab);
         FloatingActionButton stopFab = myView.findViewById(R.id.stop_fab);
+
+//        Log.e("MINE", String.valueOf(appFab.getHeight()));
+//        Log.e("MINE", String.valueOf(stopFab.getHeight()));
+//        appFab.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+////                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+////                    this.appFab.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+////                } else {
+////                    this.appFab.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+////                }
+//                int width  = appFab.getMeasuredWidth();
+//                int height = appFab.getMeasuredHeight();
+//                Log.e("MINE", String.valueOf(height));
+//                if(prms == null){
+//                    prms = fabLayout.getLayoutParams();
+//                }
+//                if(height > 0){
+//                    if(!isExpanded){
+//                        isExpanded  = true;
+//                        int newHeight = prms.height +  height * 2;
+//                        prms.height = newHeight;
+//                        ConstraintLayout.LayoutParams newParams = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,newHeight);
+//                        fabLayout.setLayoutParams(newParams);
+//                        //
+//                        WindowManager.LayoutParams params = (WindowManager.LayoutParams) flutterView.getLayoutParams();
+//                        params.width = width;
+//                        params.height = height;
+//                        windowManager.updateViewLayout(myView, params);
+//                        //
+////                        myView.updateViewLayout(fabLayout,prms);
+////                        windowManager.updateViewLayout(myView, myView.getLayoutParams());
+//                        Log.e("MINE","UPDATED PARAMS" + newHeight);
+//                    }
+//                } else {
+//                    if(isExpanded){
+//                        isExpanded  = false;
+//                        int newHeight = prms.height +  height * 2;
+//                        prms.height = newHeight;
+//                        ConstraintLayout.LayoutParams newParams = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,newHeight);
+//
+//                        fabLayout.setLayoutParams(newParams);
+//                        //
+//                        WindowManager.LayoutParams params = (WindowManager.LayoutParams) flutterView.getLayoutParams();
+//                        params.width = width;
+//                        params.height = height;
+//                        windowManager.updateViewLayout(myView, params);
+//                        //
+//
+////                        myView.updateViewLayout(fabLayout,prms);
+////                        windowManager.updateViewLayout(myView, myView.getLayoutParams());
+//                        Log.e("MINE","UPDATED PARAMS" + newHeight);
+//
+//                    }
+//                }
+//
+//
+//            }
+//        });
+
 //        fabLayout.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -239,7 +303,7 @@ public class OverlayService extends Service implements View.OnTouchListener {
 //                return true;
 //            }
 //        });
-
+//
 //        mainFab.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -252,13 +316,13 @@ public class OverlayService extends Service implements View.OnTouchListener {
 //                                ));
 //                            } else {
 //                                fabLayout.setLayoutParams(new ConstraintLayout.LayoutParams(
-//                                        ConstraintLayout.LayoutParams.WRAP_CONTENT,550
+//                                        ConstraintLayout.LayoutParams.WRAP_CONTENT,220
 //                                ));
 //                            }
 //                            isExpanded = !isExpanded;
 //
 //                        }
-//                    },2500);
+//                    },500);
 //                }
 //                return true;
 //            }
