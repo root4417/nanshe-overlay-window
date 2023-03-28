@@ -24,7 +24,7 @@
             app:fabType="circle"
             android:layout_height="wrap_content"
             app:fabAnimateMenu="false"
-            app:fabColor="#ef476f" >
+            app:fabColor="#393e41" >
         </com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton>
 
         <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton

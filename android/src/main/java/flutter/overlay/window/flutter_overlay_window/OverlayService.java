@@ -371,6 +371,7 @@ public class OverlayService extends Service implements View.OnTouchListener {
 //            }
 //        });
         mainFab.setText("00:00");
+        mainFab.setTextColor(Color.parseColor("#ffffff"));
         mainFab.setClickable(true);
         mainFab.setOnTouchListener(this);
 
