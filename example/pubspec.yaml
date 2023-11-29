@@ -18,17 +18,14 @@ dependencies:
   flutter:
     sdk: flutter
   multiavatar: ^0.1.5
-  provider: ^6.0.2
-  rename: ^2.0.0-dev.2
-  shimmer: ^2.0.0
-  simple_animations: ^4.0.2
+  provider: ^6.1.1
+  rename: ^3.0.1
+  shimmer: ^3.0.0
+  simple_animations: ^5.0.2
   supercharged: ^2.1.1
-  flutter_app_version_checker: ^0.0.3
+  flutter_app_version_checker: ^0.3.2
   floating_action_bubble: ^1.1.4
   fab_circular_menu: ^1.0.0
-
-  # flutter_overlay_window: ^0.3.2
-
   flutter_overlay_window:
     path: ../
 
